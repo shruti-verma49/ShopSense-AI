@@ -1,6 +1,7 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import AISearch from "./components/AISearch";
+import Categories from "./components/Categories";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Navbar />
       <Hero />
       <AISearch />
+      <Categories />
     </div>
   );
 }
