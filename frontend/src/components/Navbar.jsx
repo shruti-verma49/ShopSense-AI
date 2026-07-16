@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Search, Heart, ShoppingCart, Menu, X, Moon, Sun, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { useWishlist } from "../context/WishlistContext";
 
 function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { wishlistItems } = useWishlist();
 
   const navLinks = ["Home", "Products", "Categories"];
 
@@ -38,10 +41,19 @@ function Navbar() {
             <button className="p-2 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition-all duration-200">
               <Search size={20} />
             </button>
+            
+           <Link
+  to="/wishlist"
+  className="relative p-2 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition-all duration-200"
+>
+  <Heart size={20} />
 
-            <button className="p-2 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition-all duration-200">
-              <Heart size={20} />
-            </button>
+  {wishlistItems.length > 0 && (
+    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+      {wishlistItems.length}
+    </span>
+  )}
+</Link>
 
             <button className="p-2 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-indigo-600 transition-all duration-200">
               <ShoppingCart size={20} />

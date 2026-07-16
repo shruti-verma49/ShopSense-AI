@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Star, Heart, ShoppingCart, Minus, Plus, Check, X } from "lucide-react";
+import { useWishlist } from "../context/WishlistContext";
 
 function ProductInfo({ product }) {
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const wishlisted = isInWishlist(product.id);
 
   const { title, category, price, originalPrice, discountPercent, rating, reviewCount, description, features, inStock } = product;
 
@@ -58,7 +61,6 @@ function ProductInfo({ product }) {
         )}
       </div>
 
-      {/* Quantity selector */}
       <div className="mt-6 flex items-center gap-4">
         <span className="text-sm font-medium text-gray-700">Quantity</span>
         <div className="flex items-center gap-3 border border-gray-200 rounded-xl px-3 py-2">
@@ -78,7 +80,6 @@ function ProductInfo({ product }) {
         </div>
       </div>
 
-      {/* Action buttons */}
       <div className="mt-8 flex flex-col sm:flex-row gap-3">
         <button
           disabled={!inStock}
@@ -88,13 +89,16 @@ function ProductInfo({ product }) {
           Add to Cart
         </button>
 
-        <button
-          onClick={() => setIsWishlisted(!isWishlisted)}
+        <motion.button
+          onClick={() => toggleWishlist(product)}
+          whileTap={{ scale: 0.9 }}
+          animate={wishlisted ? { scale: [1, 1.15, 1] } : { scale: 1 }}
+          transition={{ duration: 0.3 }}
           className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:border-[#6D5DF6] hover:text-[#6D5DF6] transition-all duration-200"
         >
-          <Heart size={18} className={isWishlisted ? "fill-[#6D5DF6] text-[#6D5DF6]" : ""} />
+          <Heart size={18} className={wishlisted ? "fill-[#6D5DF6] text-[#6D5DF6]" : ""} />
           Wishlist
-        </button>
+        </motion.button>
       </div>
     </div>
   );

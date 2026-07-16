@@ -1,16 +1,18 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Heart, Star, ShoppingCart, Sparkles } from "lucide-react";
+import { useWishlist } from "../context/WishlistContext";
 
 function ProductCard({ product }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const wishlisted = isInWishlist(product.id);
 
   const { id, title, category, price, originalPrice, discountPercent, rating, reviewCount, isAIPick, icon: Icon } = product;
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(!isWishlisted);
+    toggleWishlist(product);
   };
 
   const handleAddToCartClick = (e) => {
@@ -42,15 +44,18 @@ function ProductCard({ product }) {
           </div>
         )}
 
-        <button
+        <motion.button
           onClick={handleWishlistClick}
-          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center hover:scale-110 transition-transform duration-200"
+          whileTap={{ scale: 0.85 }}
+          animate={wishlisted ? { scale: [1, 1.3, 1] } : { scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center"
         >
           <Heart
             size={16}
-            className={isWishlisted ? "fill-[#6D5DF6] text-[#6D5DF6]" : "text-gray-400"}
+            className={wishlisted ? "fill-[#6D5DF6] text-[#6D5DF6]" : "text-gray-400"}
           />
-        </button>
+        </motion.button>
       </div>
 
       <div className="p-5">
