@@ -23,33 +23,33 @@ function ProductInfo({ product }) {
   return (
     <div>
       <span className="text-sm font-medium text-[#6D5DF6]">{category}</span>
-      <h1 className="mt-2 text-3xl md:text-4xl font-bold text-gray-900">{title}</h1>
+      <h1 className="mt-2 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{title}</h1>
 
       <div className="mt-3 flex items-center gap-2">
         <Star size={18} className="fill-yellow-400 text-yellow-400" />
-        <span className="text-gray-700 font-medium">{rating}</span>
-        <span className="text-gray-400 text-sm">({reviewCount} reviews)</span>
+        <span className="text-gray-700 dark:text-gray-300 font-medium">{rating}</span>
+        <span className="text-gray-400 dark:text-gray-500 text-sm">({reviewCount} reviews)</span>
       </div>
 
       <div className="mt-5 flex items-center gap-3">
-        <span className="text-3xl font-bold text-gray-900">₹{price}</span>
+        <span className="text-3xl font-bold text-gray-900 dark:text-white">₹{price}</span>
         {originalPrice > price && (
           <>
-            <span className="text-lg text-gray-400 line-through">₹{originalPrice}</span>
-            <span className="px-2.5 py-1 rounded-full bg-red-100 text-red-600 text-sm font-semibold">
+            <span className="text-lg text-gray-400 dark:text-gray-500 line-through">₹{originalPrice}</span>
+            <span className="px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-semibold">
               -{discountPercent}%
             </span>
           </>
         )}
       </div>
 
-      <p className="mt-5 text-gray-600 leading-relaxed">{description}</p>
+      <p className="mt-5 text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
 
       <div className="mt-6">
-        <h3 className="text-sm font-semibold text-gray-900">Key Features</h3>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Key Features</h3>
         <ul className="mt-3 space-y-2">
           {features.map((feature) => (
-            <li key={feature} className="flex items-center gap-2 text-sm text-gray-600">
+            <li key={feature} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Check size={16} className="text-[#6D5DF6] shrink-0" />
               {feature}
             </li>
@@ -60,30 +60,30 @@ function ProductInfo({ product }) {
       <div className="mt-6 flex items-center gap-2">
         {inStock ? (
           <>
-            <Check size={16} className="text-green-500" />
-            <span className="text-sm font-medium text-green-600">In Stock</span>
+            <Check size={16} className="text-green-500 dark:text-green-400" />
+            <span className="text-sm font-medium text-green-600 dark:text-green-400">In Stock</span>
           </>
         ) : (
           <>
-            <X size={16} className="text-red-500" />
-            <span className="text-sm font-medium text-red-600">Out of Stock</span>
+            <X size={16} className="text-red-500 dark:text-red-400" />
+            <span className="text-sm font-medium text-red-600 dark:text-red-400">Out of Stock</span>
           </>
         )}
       </div>
 
       <div className="mt-6 flex items-center gap-4">
-        <span className="text-sm font-medium text-gray-700">Quantity</span>
-        <div className="flex items-center gap-3 border border-gray-200 rounded-xl px-3 py-2">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</span>
+        <div className="flex items-center gap-3 border border-gray-200 dark:border-gray-700 rounded-xl px-3 py-2">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="text-gray-500 hover:text-[#6D5DF6] transition-colors duration-200"
+            className="text-gray-500 dark:text-gray-400 hover:text-[#6D5DF6] transition-colors duration-200"
           >
             <Minus size={16} />
           </button>
-          <span className="w-6 text-center font-medium text-gray-900">{quantity}</span>
+          <span className="w-6 text-center font-medium text-gray-900 dark:text-white">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="text-gray-500 hover:text-[#6D5DF6] transition-colors duration-200"
+            className="text-gray-500 dark:text-gray-400 hover:text-[#6D5DF6] transition-colors duration-200"
           >
             <Plus size={16} />
           </button>
@@ -105,7 +105,7 @@ function ProductInfo({ product }) {
           whileTap={{ scale: 0.9 }}
           animate={wishlisted ? { scale: [1, 1.15, 1] } : { scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:border-[#6D5DF6] hover:text-[#6D5DF6] transition-all duration-200"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium hover:border-[#6D5DF6] hover:text-[#6D5DF6] transition-all duration-200"
         >
           <Heart size={18} className={wishlisted ? "fill-[#6D5DF6] text-[#6D5DF6]" : ""} />
           Wishlist

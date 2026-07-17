@@ -7,10 +7,10 @@ function Wishlist() {
   const { wishlistItems } = useWishlist();
 
   return (
-    <div className="bg-white min-h-[60vh]">
+    <div className="bg-white dark:bg-gray-900 min-h-[60vh] transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">My Wishlist</h1>
-        <p className="mt-2 text-gray-500">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
+        <p className="mt-2 text-gray-500 dark:text-gray-400">
           {wishlistItems.length > 0
             ? `${wishlistItems.length} item${wishlistItems.length > 1 ? "s" : ""} saved for later.`
             : "Items you love, all in one place."}
@@ -18,11 +18,11 @@ function Wishlist() {
 
         {wishlistItems.length === 0 ? (
           <div className="mt-16 flex flex-col items-center text-center">
-            <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center">
-              <Heart size={32} className="text-gray-300" />
+            <div className="w-20 h-20 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
+              <Heart size={32} className="text-gray-300 dark:text-gray-600" />
             </div>
-            <h2 className="mt-6 text-xl font-semibold text-gray-900">Your wishlist is empty</h2>
-            <p className="mt-2 text-gray-500 max-w-sm">
+            <h2 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Your wishlist is empty</h2>
+            <p className="mt-2 text-gray-500 dark:text-gray-400 max-w-sm">
               Tap the heart icon on any product to save it here for later.
             </p>
             <Link

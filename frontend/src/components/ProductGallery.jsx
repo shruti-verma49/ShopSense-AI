@@ -11,7 +11,7 @@ function ProductGallery({ icon: Icon }) {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#6D5DF6]/10 to-[#5B8DEF]/10 border border-gray-200 flex items-center justify-center cursor-pointer hover:border-[#6D5DF6] transition-all duration-200"
+            className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#6D5DF6]/10 to-[#5B8DEF]/10 border border-gray-200 dark:border-gray-700 flex items-center justify-center cursor-pointer hover:border-[#6D5DF6] transition-all duration-200"
           >
             <Icon size={22} className="text-[#6D5DF6]" />
           </div>

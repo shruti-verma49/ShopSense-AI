@@ -28,7 +28,7 @@ function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${id}`}
-      className="group block bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+      className="group block bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
     >
       <div className="relative h-44 bg-gradient-to-br from-[#6D5DF6]/10 to-[#5B8DEF]/10 flex items-center justify-center">
         <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#6D5DF6] to-[#5B8DEF] flex items-center justify-center">
@@ -53,7 +53,7 @@ function ProductCard({ product }) {
           whileTap={{ scale: 0.85 }}
           animate={wishlisted ? { scale: [1, 1.3, 1] } : { scale: 1 }}
           transition={{ duration: 0.3 }}
-          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center"
+          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-white dark:bg-gray-700 shadow-md flex items-center justify-center"
         >
           <Heart
             size={16}
@@ -63,19 +63,19 @@ function ProductCard({ product }) {
       </div>
 
       <div className="p-5">
-        <span className="text-xs font-medium text-gray-400">{category}</span>
-        <h3 className="mt-1 text-base font-semibold text-gray-900 truncate">{title}</h3>
+        <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{category}</span>
+        <h3 className="mt-1 text-base font-semibold text-gray-900 dark:text-white truncate">{title}</h3>
 
         <div className="mt-2 flex items-center gap-1">
           <Star size={14} className="fill-yellow-400 text-yellow-400" />
-          <span className="text-sm text-gray-600">{rating}</span>
-          <span className="text-xs text-gray-400">({reviewCount})</span>
+          <span className="text-sm text-gray-600 dark:text-gray-300">{rating}</span>
+          <span className="text-xs text-gray-400 dark:text-gray-500">({reviewCount})</span>
         </div>
 
         <div className="mt-3 flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">₹{price}</span>
+          <span className="text-lg font-bold text-gray-900 dark:text-white">₹{price}</span>
           {originalPrice > price && (
-            <span className="text-sm text-gray-400 line-through">₹{originalPrice}</span>
+            <span className="text-sm text-gray-400 dark:text-gray-500 line-through">₹{originalPrice}</span>
           )}
         </div>
 

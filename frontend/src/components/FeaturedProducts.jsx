@@ -55,7 +55,7 @@ function FeaturedProducts() {
   };
 
   return (
-    <section className="bg-gray-50">
+    <section className="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-20">
 
         <motion.div
@@ -65,10 +65,10 @@ function FeaturedProducts() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
             AI Recommended Products
           </h2>
-          <p className="mt-4 text-lg text-gray-500 max-w-xl mx-auto">
+          <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 max-w-xl mx-auto">
             Personalized picks based on trending items and what shoppers like you are loving right now.
           </p>
         </motion.div>
@@ -97,11 +97,11 @@ function FeaturedProducts() {
             transition={{ duration: 0.4 }}
             className="mt-16 flex flex-col items-center text-center"
           >
-            <div className="w-20 h-20 rounded-full bg-white border border-gray-200 flex items-center justify-center">
-              <PackageX size={32} className="text-gray-300" />
+            <div className="w-20 h-20 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center">
+              <PackageX size={32} className="text-gray-300 dark:text-gray-600" />
             </div>
-            <h3 className="mt-6 text-xl font-semibold text-gray-900">No Products Found</h3>
-            <p className="mt-2 text-gray-500 max-w-sm">
+            <h3 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">No Products Found</h3>
+            <p className="mt-2 text-gray-500 dark:text-gray-400 max-w-sm">
               Try adjusting your filters to see more products.
             </p>
             <button
