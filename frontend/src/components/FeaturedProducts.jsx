@@ -1,23 +1,32 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
+import { PackageX } from "lucide-react";
 import { products } from "../constants/products";
 import ProductCard from "./ProductCard";
 import ProductFilters from "./ProductFilters";
+import ProductSkeleton from "./ProductSkeleton";
 
 function FeaturedProducts() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPriceRange, setSelectedPriceRange] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...products];
 
-    // Category filter
     if (selectedCategory !== "All") {
       result = result.filter((product) => product.category === selectedCategory);
     }
 
-    // Price range filter
     if (selectedPriceRange === "under-1000") {
       result = result.filter((product) => product.price < 1000);
     } else if (selectedPriceRange === "1000-3000") {
@@ -26,7 +35,6 @@ function FeaturedProducts() {
       result = result.filter((product) => product.price > 3000);
     }
 
-    // Sorting
     if (sortBy === "price-asc") {
       result.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
@@ -36,10 +44,15 @@ function FeaturedProducts() {
     } else if (sortBy === "discount") {
       result.sort((a, b) => b.discountPercent - a.discountPercent);
     }
-    // "featured" keeps the original order — no sort needed
 
     return result;
   }, [selectedCategory, selectedPriceRange, sortBy]);
+
+  const handleClearFilters = () => {
+    setSelectedCategory("All");
+    setSelectedPriceRange("all");
+    setSortBy("featured");
+  };
 
   return (
     <section className="bg-gray-50">
@@ -71,10 +84,33 @@ function FeaturedProducts() {
           />
         </div>
 
-        {filteredAndSortedProducts.length === 0 ? (
-          <div className="mt-16 text-center text-gray-400">
-            No products match the selected filters.
+        {isLoading ? (
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <ProductSkeleton key={index} />
+            ))}
           </div>
+        ) : filteredAndSortedProducts.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-16 flex flex-col items-center text-center"
+          >
+            <div className="w-20 h-20 rounded-full bg-white border border-gray-200 flex items-center justify-center">
+              <PackageX size={32} className="text-gray-300" />
+            </div>
+            <h3 className="mt-6 text-xl font-semibold text-gray-900">No Products Found</h3>
+            <p className="mt-2 text-gray-500 max-w-sm">
+              Try adjusting your filters to see more products.
+            </p>
+            <button
+              onClick={handleClearFilters}
+              className="mt-6 px-6 py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] transition-all duration-200"
+            >
+              Clear Filters
+            </button>
+          </motion.div>
         ) : (
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {filteredAndSortedProducts.map((product, index) => (
