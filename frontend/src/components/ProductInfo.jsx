@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import { Star, Heart, ShoppingCart, Minus, Plus, Check, X } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 
 function ProductInfo({ product }) {
   const [quantity, setQuantity] = useState(1);
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const wishlisted = isInWishlist(product.id);
 
   const { title, category, price, originalPrice, discountPercent, rating, reviewCount, description, features, inStock } = product;
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
+    toast.success("Added to Cart");
+  };
 
   return (
     <div>
@@ -82,6 +92,7 @@ function ProductInfo({ product }) {
 
       <div className="mt-8 flex flex-col sm:flex-row gap-3">
         <button
+          onClick={handleAddToCart}
           disabled={!inStock}
           className="flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >

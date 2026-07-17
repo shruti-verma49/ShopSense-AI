@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import { Heart, Star, ShoppingCart, Sparkles } from "lucide-react";
 import { useWishlist } from "../context/WishlistContext";
+import { useCart } from "../context/CartContext";
 
 function ProductCard({ product }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const wishlisted = isInWishlist(product.id);
 
   const { id, title, category, price, originalPrice, discountPercent, rating, reviewCount, isAIPick, icon: Icon } = product;
@@ -18,7 +21,8 @@ function ProductCard({ product }) {
   const handleAddToCartClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Cart logic will be wired up once CartContext exists
+    addToCart(product);
+    toast.success("Added to Cart");
   };
 
   return (
