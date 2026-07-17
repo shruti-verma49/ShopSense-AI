@@ -83,9 +83,12 @@ function Navbar() {
               {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
 
-            <button className="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-indigo-600 hover:text-indigo-600 transition-all duration-200">
+           <Link
+              to="/login"
+              className="px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-indigo-600 hover:text-indigo-600 transition-all duration-200"
+            >
               Login
-            </button>
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -153,9 +156,12 @@ function Navbar() {
                 </button>
               </div>
 
-              <button className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-indigo-600 hover:text-indigo-600 transition-all duration-200">
+              <Link
+                to="/login"
+                className="w-full block text-center px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200 hover:border-indigo-600 hover:text-indigo-600 transition-all duration-200"
+              >
                 Login
-              </button>
+              </Link>
             </div>
           </motion.div>
         )}
