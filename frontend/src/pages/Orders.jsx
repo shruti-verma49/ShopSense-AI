@@ -3,25 +3,7 @@ import { Link } from "react-router-dom";
 import { Package, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { getOrdersApi } from "../services/orderService";
-
-function StatusBadge({ status, type }) {
-  const colorMap = {
-    Paid: "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-    Pending: "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400",
-    Failed: "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400",
-    Placed: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
-    Processing: "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400",
-    Shipped: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
-    Delivered: "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400",
-    Cancelled: "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400",
-  };
-
-  return (
-    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${colorMap[status] || "bg-gray-50 text-gray-600"}`}>
-      {type}: {status}
-    </span>
-  );
-}
+import DeliveryStatusBadge from "../components/DeliveryStatusBadge";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -87,11 +69,7 @@ function Orders() {
                       {order.paymentMethod === "COD" ? "Cash On Delivery" : "Online Payment"}
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-2 justify-end">
-                    <StatusBadge status={order.orderStatus} type="Order" />
-                    <StatusBadge status={order.paymentStatus} type="Payment" />
-                    <StatusBadge status={order.deliveryStatus} type="Delivery" />
-                  </div>
+                  <DeliveryStatusBadge status={order.deliveryStatus} />
                 </div>
 
                 <div className="mt-4 space-y-1">

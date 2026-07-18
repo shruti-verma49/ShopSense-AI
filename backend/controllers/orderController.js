@@ -77,7 +77,7 @@ const createOrder = async (req, res) => {
       paymentId,
       razorpayOrderId,
       paymentStatus,
-      deliveryStatus: "Pending",
+      deliveryStatus: "Placed",
       orderStatus: "Placed",
       estimatedDeliveryDate,
     });
@@ -118,4 +118,33 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getOrders, getOrderById };
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+    if (order.user.toString() !== req.user.userId) {
+      return res.status(403).json({ success: false, message: "Not authorized to cancel this order" });
+    }
+
+    const cancellableStatuses = ["Placed", "Confirmed"];
+    if (!cancellableStatuses.includes(order.deliveryStatus)) {
+      return res.status(400).json({ success: false, message: "This order can no longer be cancelled" });
+    }
+
+    order.deliveryStatus = "Cancelled";
+    order.orderStatus = "Cancelled";
+    await order.save();
+
+    return res.status(200).json({ success: true, message: "Order cancelled successfully", order });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ success: false, message: "Invalid order ID format" });
+    }
+    return res.status(500).json({ success: false, message: "Something went wrong while cancelling the order", error: error.message });
+  }
+};
+
+module.exports = { createOrder, getOrders, getOrderById, cancelOrder };

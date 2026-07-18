@@ -1,29 +1,57 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Package, MapPin, Wallet, CreditCard, CheckCircle2 } from "lucide-react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { ArrowLeft, Package, MapPin, Wallet, CreditCard, LifeBuoy, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { getOrderByIdApi } from "../services/orderService";
+import { getOrderByIdApi, cancelOrderApi } from "../services/orderService";
+import DeliveryTimeline from "../components/DeliveryTimeline";
+import DeliveryStatusBadge from "../components/DeliveryStatusBadge";
+
+const PAYMENT_STATUS_STYLES = {
+  Paid: "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400",
+  Pending: "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400",
+  Failed: "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400",
+};
 
 function OrderDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCancelling, setIsCancelling] = useState(false);
+
+  const loadOrder = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getOrderByIdApi(id);
+      setOrder(response.data.order);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not load order details");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadOrder = async () => {
-      setIsLoading(true);
-      try {
-        const response = await getOrderByIdApi(id);
-        setOrder(response.data.order);
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Could not load order details");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const canCancel = order && ["Placed", "Confirmed"].includes(order.deliveryStatus);
+
+  const handleCancelOrder = async () => {
+    if (!window.confirm("Are you sure you want to cancel this order?")) return;
+
+    setIsCancelling(true);
+    try {
+      const response = await cancelOrderApi(order._id);
+      setOrder(response.data.order);
+      toast.success("Order cancelled");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not cancel this order");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -55,23 +83,27 @@ function OrderDetails() {
           Back to My Orders
         </Link>
 
-        <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Order Details</h1>
-        <p className="text-sm text-gray-400 dark:text-gray-500">Order ID: {order._id}</p>
+        <div className="mt-4 flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Order Details</h1>
+            <p className="text-sm text-gray-400 dark:text-gray-500">Order ID: {order._id}</p>
+          </div>
+          <DeliveryStatusBadge status={order.deliveryStatus} />
+        </div>
 
         <div className="mt-8 grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
 
-            {/* Order Timeline Placeholder */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Order Status</h2>
-              <div className="mt-4 flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5">
-                <div className="w-10 h-10 rounded-full bg-[#6D5DF6]/10 flex items-center justify-center shrink-0">
-                  <CheckCircle2 size={20} className="text-[#6D5DF6]" />
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900 dark:text-white">{order.orderStatus}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Detailed tracking coming soon</p>
-                </div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Delivery Status</h2>
+              <div className="mt-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                <DeliveryTimeline currentStatus={order.deliveryStatus} />
+                {order.estimatedDeliveryDate && order.deliveryStatus !== "Delivered" && order.deliveryStatus !== "Cancelled" && (
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                    <Package size={14} />
+                    Expected by {new Date(order.estimatedDeliveryDate).toLocaleDateString("en-IN", { day: "numeric", month: "long" })}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -107,6 +139,30 @@ function OrderDetails() {
                 </div>
               </div>
             </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Need Help?</h2>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a
+                  href="mailto:support@shopsense.ai"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 font-medium hover:border-[#6D5DF6] hover:text-[#6D5DF6] transition-all duration-200"
+                >
+                  <LifeBuoy size={16} />
+                  Contact Support
+                </a>
+
+                {canCancel && (
+                  <button
+                    onClick={handleCancelOrder}
+                    disabled={isCancelling}
+                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    <XCircle size={16} />
+                    {isCancelling ? "Cancelling..." : "Cancel Order"}
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="lg:col-span-1">
@@ -118,19 +174,16 @@ function OrderDetails() {
                 {order.paymentMethod === "COD" ? "Cash On Delivery" : "Online Payment"}
               </div>
 
+              <div className="mt-3 flex items-center justify-between text-sm">
+                <span className="text-gray-500 dark:text-gray-400">Payment Status</span>
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${PAYMENT_STATUS_STYLES[order.paymentStatus] || ""}`}>
+                  {order.paymentStatus}
+                </span>
+              </div>
+
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <span className="font-semibold text-gray-900 dark:text-white">Total Amount</span>
                 <span className="text-xl font-bold text-gray-900 dark:text-white">₹{order.totalAmount}</span>
-              </div>
-
-              <div className="mt-4 flex items-start gap-2 text-xs text-gray-500 dark:text-gray-400">
-                <Package size={14} className="mt-0.5 shrink-0" />
-                <span>
-                  Estimated delivery:{" "}
-                  {order.estimatedDeliveryDate
-                    ? new Date(order.estimatedDeliveryDate).toLocaleDateString("en-IN", { day: "numeric", month: "long" })
-                    : "—"}
-                </span>
               </div>
             </div>
           </div>
