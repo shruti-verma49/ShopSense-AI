@@ -1,15 +1,51 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { getProductById, getSimilarProducts } from "../constants/products";
+import { fetchProductById, fetchProducts } from "../services/productService";
 import ProductGallery from "../components/ProductGallery";
 import ProductInfo from "../components/ProductInfo";
 import SimilarProducts from "../components/SimilarProducts";
 
 function ProductDetails() {
   const { id } = useParams();
-  const product = getProductById(id);
+  const [product, setProduct] = useState(null);
+  const [similarProducts, setSimilarProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!product) {
+  useEffect(() => {
+    const loadProduct = async () => {
+      setIsLoading(true);
+      setNotFound(false);
+
+      try {
+        const fetchedProduct = await fetchProductById(id);
+        setProduct(fetchedProduct);
+
+        const allProducts = await fetchProducts();
+        const similar = allProducts
+          .filter((p) => p.category === fetchedProduct.category && p.id !== fetchedProduct.id)
+          .slice(0, 4);
+        setSimilarProducts(similar);
+      } catch (error) {
+        setNotFound(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto px-6 py-24 text-center text-gray-400 dark:text-gray-500">
+        Loading product...
+      </div>
+    );
+  }
+
+  if (notFound || !product) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-24 text-center bg-white dark:bg-gray-900">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Product not found</h1>
@@ -21,8 +57,6 @@ function ProductDetails() {
       </div>
     );
   }
-
-  const similarProducts = getSimilarProducts(product);
 
   return (
     <div className="bg-white dark:bg-gray-900 transition-colors duration-300">

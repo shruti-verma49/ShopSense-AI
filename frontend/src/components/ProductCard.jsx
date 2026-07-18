@@ -18,11 +18,16 @@ function ProductCard({ product }) {
     toggleWishlist(product);
   };
 
-  const handleAddToCartClick = (e) => {
+  const handleAddToCartClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product);
-    toast.success("Added to Cart");
+    try {
+      await addToCart(product);
+      toast.success("Added to Cart");
+    } catch (error) {
+      const message = error.response?.data?.message || "Please log in to add items to your cart";
+      toast.error(message);
+    }
   };
 
   return (

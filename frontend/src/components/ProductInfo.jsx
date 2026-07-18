@@ -13,11 +13,14 @@ function ProductInfo({ product }) {
 
   const { title, category, price, originalPrice, discountPercent, rating, reviewCount, description, features, inStock } = product;
 
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addToCart(product);
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(product, quantity);
+      toast.success("Added to Cart");
+    } catch (error) {
+      const message = error.response?.data?.message || "Please log in to add items to your cart";
+      toast.error(message);
     }
-    toast.success("Added to Cart");
   };
 
   return (
@@ -45,17 +48,19 @@ function ProductInfo({ product }) {
 
       <p className="mt-5 text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
 
-      <div className="mt-6">
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Key Features</h3>
-        <ul className="mt-3 space-y-2">
-          {features.map((feature) => (
-            <li key={feature} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <Check size={16} className="text-[#6D5DF6] shrink-0" />
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {features.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Key Features</h3>
+          <ul className="mt-3 space-y-2">
+            {features.map((feature) => (
+              <li key={feature} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <Check size={16} className="text-[#6D5DF6] shrink-0" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-6 flex items-center gap-2">
         {inStock ? (

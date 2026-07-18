@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
+import toast from "react-hot-toast";
+import { User, Mail, Lock, Eye, EyeOff, Sparkles, Loader2 } from "lucide-react";
+import { registerUser } from "../services/authService";
 
 function Signup() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,6 +16,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,10 +55,24 @@ function Signup() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      // Backend signup logic will be wired up once the API exists
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      toast.success("Account created! Please log in.");
+      navigate("/login");
+    } catch (error) {
+      const message = error.response?.data?.message || "Something went wrong. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -81,7 +99,6 @@ function Signup() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
 
-          {/* Name */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
             <div className="mt-1.5 relative">
@@ -102,7 +119,6 @@ function Signup() {
             {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
           </div>
 
-          {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
             <div className="mt-1.5 relative">
@@ -123,7 +139,6 @@ function Signup() {
             {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
             <div className="mt-1.5 relative">
@@ -151,7 +166,6 @@ function Signup() {
             {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
             <div className="mt-1.5 relative">
@@ -181,9 +195,11 @@ function Signup() {
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[#6D5DF6]/20"
+            disabled={isSubmitting}
+            className="w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[#6D5DF6]/20 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
           >
-            Create Account
+            {isSubmitting && <Loader2 size={18} className="animate-spin" />}
+            {isSubmitting ? "Creating account..." : "Create Account"}
           </button>
         </form>
 

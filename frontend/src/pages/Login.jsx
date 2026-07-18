@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
+import toast from "react-hot-toast";
+import { Mail, Lock, Eye, EyeOff, Sparkles, Loader2 } from "lucide-react";
+import { loginUser } from "../services/authService";
+import { useCart } from "../context/CartContext";
 
 function Login() {
+  const navigate = useNavigate();
+  const { refreshCart } = useCart();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,10 +40,28 @@ function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) {
-      // Backend login logic will be wired up once the API exists
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await loginUser(formData);
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      window.dispatchEvent(new Event("authChange"));
+
+      await refreshCart();
+
+      toast.success(`Welcome back, ${user.name}!`);
+      navigate("/");
+    } catch (error) {
+      const message = error.response?.data?.message || "Something went wrong. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,7 +88,6 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
 
-          {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
             <div className="mt-1.5 relative">
@@ -85,7 +108,6 @@ function Login() {
             {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
           </div>
 
-          {/* Password */}
           <div>
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
             <div className="mt-1.5 relative">
@@ -113,7 +135,6 @@ function Login() {
             {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
           </div>
 
-          {/* Remember me + Forgot password */}
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 text-gray-600 dark:text-gray-300 cursor-pointer">
               <input
@@ -131,9 +152,11 @@ function Login() {
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[#6D5DF6]/20"
+            disabled={isSubmitting}
+            className="w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[#6D5DF6]/20 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
           >
-            Log In
+            {isSubmitting && <Loader2 size={18} className="animate-spin" />}
+            {isSubmitting ? "Logging in..." : "Log In"}
           </button>
         </form>
 
