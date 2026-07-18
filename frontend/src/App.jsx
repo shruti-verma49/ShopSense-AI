@@ -12,6 +12,12 @@ import Addresses from "./pages/Addresses";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
+import AdminRoute from "./components/admin/AdminRoute";
+import AdminHome from "./pages/admin/AdminHome";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProducts from "./pages/admin/Products";
+import AdminOrders from "./pages/admin/Orders";
+import AdminUsers from "./pages/admin/UsersPage";
 
 function App() {
   return (
@@ -30,6 +36,11 @@ function App() {
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/orders/:id" element={<OrderDetails />} />
+        <Route path="/admin" element={<AdminRoute><AdminHome /></AdminRoute>} />
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
+        <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
       </Routes>
     </div>
   );
