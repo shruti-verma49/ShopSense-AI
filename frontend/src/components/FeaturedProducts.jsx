@@ -41,12 +41,12 @@ function FeaturedProducts() {
       result = result.filter((product) => product.category === selectedCategory);
     }
 
-    if (selectedPriceRange === "under-1000") {
-      result = result.filter((product) => product.price < 1000);
-    } else if (selectedPriceRange === "1000-3000") {
-      result = result.filter((product) => product.price >= 1000 && product.price <= 3000);
-    } else if (selectedPriceRange === "above-3000") {
-      result = result.filter((product) => product.price > 3000);
+    if (selectedPriceRange === "under-25000") {
+      result = result.filter((product) => product.price < 25000);
+    } else if (selectedPriceRange === "25000-75000") {
+      result = result.filter((product) => product.price >= 25000 && product.price <= 75000);
+    } else if (selectedPriceRange === "above-75000") {
+      result = result.filter((product) => product.price > 75000);
     }
 
     if (sortBy === "price-asc") {

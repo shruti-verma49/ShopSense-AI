@@ -11,7 +11,20 @@ function ProductInfo({ product }) {
   const { addToCart } = useCart();
   const wishlisted = isInWishlist(product.id);
 
-  const { title, category, price, originalPrice, discountPercent, rating, reviewCount, description, features, inStock } = product;
+  const {
+    title,
+    brand,
+    category,
+    price,
+    originalPrice,
+    discountPercent,
+    rating,
+    reviewCount,
+    description,
+    features,
+    specifications,
+    inStock,
+  } = product;
 
   const handleAddToCart = async () => {
     try {
@@ -27,6 +40,7 @@ function ProductInfo({ product }) {
     <div>
       <span className="text-sm font-medium text-[#6D5DF6]">{category}</span>
       <h1 className="mt-2 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{title}</h1>
+      {brand && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">by {brand}</p>}
 
       <div className="mt-3 flex items-center gap-2">
         <Star size={18} className="fill-yellow-400 text-yellow-400" />
@@ -48,7 +62,7 @@ function ProductInfo({ product }) {
 
       <p className="mt-5 text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
 
-      {features.length > 0 && (
+      {features?.length > 0 && (
         <div className="mt-6">
           <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Key Features</h3>
           <ul className="mt-3 space-y-2">
@@ -59,6 +73,20 @@ function ProductInfo({ product }) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {specifications && Object.keys(specifications).length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Technical Specifications</h3>
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+            {Object.entries(specifications).map(([key, value]) => (
+              <div key={key} className="flex items-center justify-between text-sm">
+                <span className="text-gray-500 dark:text-gray-400">{key}</span>
+                <span className="text-gray-900 dark:text-white font-medium">{value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

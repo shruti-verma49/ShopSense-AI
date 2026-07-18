@@ -1,32 +1,34 @@
 export function getRecommendedProducts(currentProduct, allProducts, count = 4) {
   if (!currentProduct || !allProducts?.length) return [];
 
-  const candidates = allProducts.filter((p) => p.id !== currentProduct.id);
+  const others = allProducts.filter((p) => p.id !== currentProduct.id);
+  const picked = [];
+  const pickedIds = new Set();
 
-  const scored = candidates.map((product) => {
-    let score = 0;
-
-    if (product.category === currentProduct.category) {
-      score += 3;
+  const addFrom = (list) => {
+    for (const product of list) {
+      if (picked.length >= count) break;
+      if (pickedIds.has(product.id)) continue;
+      picked.push(product);
+      pickedIds.add(product.id);
     }
+  };
 
-    const priceDiff = Math.abs(product.price - currentProduct.price);
+  const sameCategory = others.filter((p) => p.category === currentProduct.category);
+  addFrom(sameCategory);
+
+  if (picked.length < count) {
     const priceRange = currentProduct.price * 0.3;
-    if (priceDiff <= priceRange) {
-      score += 2;
-    } else if (priceDiff <= priceRange * 2) {
-      score += 1;
-    }
+    const similarPrice = [...others].sort(
+      (a, b) => Math.abs(a.price - currentProduct.price) - Math.abs(b.price - currentProduct.price)
+    );
+    addFrom(similarPrice.filter((p) => Math.abs(p.price - currentProduct.price) <= priceRange));
+  }
 
-    if (currentProduct.brand && product.brand && product.brand === currentProduct.brand) {
-      score += 3;
-    }
+  if (picked.length < count) {
+    const byRating = [...others].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    addFrom(byRating);
+  }
 
-    return { product, score };
-  });
-
-  return scored
-    .sort((a, b) => b.score - a.score)
-    .slice(0, count)
-    .map((item) => item.product);
+  return picked.slice(0, count);
 }

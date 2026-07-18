@@ -1,12 +1,12 @@
 import { ChevronDown } from "lucide-react";
 
-const categories = ["All", "Electronics", "Footwear", "Fashion", "Accessories"];
+const categories = ["All", "Smartphones", "Laptops", "Headphones", "Smart Watches", "Gaming Accessories", "Cameras", "Tablets"];
 
 const priceRanges = [
   { label: "All Prices", value: "all" },
-  { label: "Under ₹1000", value: "under-1000" },
-  { label: "₹1000–₹3000", value: "1000-3000" },
-  { label: "Above ₹3000", value: "above-3000" },
+  { label: "Under ₹25,000", value: "under-25000" },
+  { label: "₹25,000–₹75,000", value: "25000-75000" },
+  { label: "Above ₹75,000", value: "above-75000" },
 ];
 
 const sortOptions = [
