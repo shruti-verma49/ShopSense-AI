@@ -5,7 +5,7 @@ function AdminRoute({ children }) {
   const user = storedUser ? JSON.parse(storedUser) : null;
 
   if (!user || user.role !== "admin") {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   return children;

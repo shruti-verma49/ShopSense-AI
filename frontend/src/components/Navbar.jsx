@@ -77,11 +77,10 @@ function Navbar() {
 
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link) => (
-                
                 <a
                   key={link}
                   href="#"
-                  className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                  className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-300 hover:after:w-full"
                 >
                   {link}
                 </a>
@@ -91,7 +90,7 @@ function Navbar() {
             <div className="hidden md:flex items-center gap-3">
               <button
                 onClick={() => setIsAssistantOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 hover:scale-105 transition-all duration-200 shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all duration-200 shadow-sm"
               >
                 <Sparkles size={16} />
                 AI Assistant
@@ -99,14 +98,16 @@ function Navbar() {
 
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
+                aria-label="Search products"
+                className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all duration-200"
               >
                 <Search size={20} />
               </button>
 
               <Link
                 to="/wishlist"
-                className="relative p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
+                aria-label={`Wishlist, ${wishlistItems.length} items`}
+                className="relative p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all duration-200"
               >
                 <Heart size={20} />
                 {wishlistItems.length > 0 && (
@@ -118,16 +119,29 @@ function Navbar() {
 
               <Link
                 to="/cart"
-                className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
+                aria-label="Cart"
+                className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all duration-200"
               >
                 <ShoppingCart size={20} />
               </Link>
 
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
+                aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+                className="relative p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 hover:scale-110 active:scale-95 transition-all duration-200 overflow-hidden"
               >
-                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={isDarkMode ? "sun" : "moon"}
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="block"
+                  >
+                    {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                  </motion.span>
+                </AnimatePresence>
               </button>
 
               {currentUser ? (
@@ -138,7 +152,7 @@ function Navbar() {
                   >
                     <User size={16} />
                     Hello, {currentUser.name?.split(" ")[0]}
-                    <ChevronDown size={14} />
+                    <ChevronDown size={14} className={`transition-transform duration-200 ${isProfileMenuOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   <AnimatePresence>
@@ -194,6 +208,7 @@ function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -213,7 +228,6 @@ function Navbar() {
             >
               <div className="px-6 py-4 flex flex-col gap-4">
                 {navLinks.map((link) => (
-                  
                   <a
                     key={link}
                     href="#"
@@ -240,12 +254,14 @@ function Navbar() {
                       setIsMobileMenuOpen(false);
                       setIsSearchOpen(true);
                     }}
+                    aria-label="Search products"
                     className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
                   >
                     <Search size={20} />
                   </button>
                   <Link
                     to="/wishlist"
+                    aria-label={`Wishlist, ${wishlistItems.length} items`}
                     className="relative p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
                   >
                     <Heart size={20} />
@@ -257,12 +273,14 @@ function Navbar() {
                   </Link>
                   <Link
                     to="/cart"
+                    aria-label="Cart"
                     className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
                   >
                     <ShoppingCart size={20} />
                   </Link>
                   <button
                     onClick={() => setIsDarkMode(!isDarkMode)}
+                    aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
                     className="p-2 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-200"
                   >
                     {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
