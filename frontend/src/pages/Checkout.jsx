@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { MapPin, Plus, Truck } from "lucide-react";
+import { MapPin, Plus, Truck, Wallet, CreditCard } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { getAddressesApi } from "../services/addressService";
+import { createOrderApi } from "../services/orderService";
 import AddressCard from "../components/AddressCard";
 
 const DELIVERY_CHARGE_THRESHOLD = 999;
@@ -18,10 +19,11 @@ function getEstimatedDeliveryDate() {
 
 function Checkout() {
   const navigate = useNavigate();
-  const { cartItems } = useCart();
+  const { cartItems, refreshCart } = useCart();
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   useEffect(() => {
     const loadAddresses = async () => {
@@ -54,12 +56,31 @@ function Checkout() {
 
   const selectedAddress = addresses.find((a) => a._id === selectedAddressId);
 
-  const handleContinueToPayment = () => {
+  const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select a delivery address");
       return;
     }
-    toast("Payment integration coming soon");
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    setIsPlacingOrder(true);
+    try {
+      const orderResponse = await createOrderApi({
+        addressId: selectedAddress._id,
+        paymentMethod: "COD",
+      });
+
+      await refreshCart();
+      toast.success("Order placed successfully!");
+      navigate("/order-success", { state: { order: orderResponse.data.order } });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong while placing your order.");
+    } finally {
+      setIsPlacingOrder(false);
+    }
   };
 
   if (cartItems.length === 0) {
@@ -119,6 +140,34 @@ function Checkout() {
                     onSelect={setSelectedAddressId}
                   />
                 ))}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Payment Method</h2>
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center gap-3 rounded-2xl border border-[#6D5DF6] bg-[#6D5DF6]/5 p-4">
+                  <Wallet size={20} className="text-[#6D5DF6] shrink-0" />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-900 dark:text-white">Cash On Delivery</span>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Pay when your order arrives</p>
+                  </div>
+                  <div className="w-5 h-5 rounded-full border-2 border-[#6D5DF6] bg-[#6D5DF6] shrink-0" />
+                </div>
+
+                <div
+                  onClick={() => toast("Online payment is coming soon")}
+                  className="flex items-center gap-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 cursor-not-allowed opacity-60"
+                >
+                  <CreditCard size={20} className="text-gray-400 shrink-0" />
+                  <div className="flex-1">
+                    <span className="font-medium text-gray-500 dark:text-gray-400">Online Payment</span>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">Card, UPI & more</p>
+                  </div>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 text-xs font-medium shrink-0">
+                    Coming Soon
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -185,10 +234,11 @@ function Checkout() {
               )}
 
               <button
-                onClick={handleContinueToPayment}
-                className="mt-6 w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] transition-all duration-200"
+                onClick={handlePlaceOrder}
+                disabled={isPlacingOrder}
+                className="mt-6 w-full py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Continue to Payment
+                {isPlacingOrder ? "Placing Order..." : "Place Order"}
               </button>
             </div>
           </div>

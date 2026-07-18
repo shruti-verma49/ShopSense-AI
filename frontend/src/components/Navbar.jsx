@@ -152,7 +152,7 @@ function Navbar() {
                       <button
                         onClick={() => {
                           setIsProfileMenuOpen(false);
-                          toast("Orders page coming soon");
+                          navigate("/orders");
                         }}
                         className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                       >
@@ -258,7 +258,7 @@ function Navbar() {
                     Profile
                   </button>
                   <button
-                    onClick={() => toast("Orders page coming soon")}
+                    onClick={() => navigate("/orders")}
                     className="w-full text-left px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200"
                   >
                     My Orders
