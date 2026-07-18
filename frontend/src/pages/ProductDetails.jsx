@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { fetchProductById, fetchProducts } from "../services/productService";
+import { getRecommendedProducts } from "../utils/productRecommendations";
+import { addRecentlyViewed } from "../utils/recentlyViewed";
 import ProductGallery from "../components/ProductGallery";
 import ProductInfo from "../components/ProductInfo";
 import SimilarProducts from "../components/SimilarProducts";
@@ -21,12 +23,11 @@ function ProductDetails() {
       try {
         const fetchedProduct = await fetchProductById(id);
         setProduct(fetchedProduct);
+        addRecentlyViewed(fetchedProduct.id);
 
         const allProducts = await fetchProducts();
-        const similar = allProducts
-          .filter((p) => p.category === fetchedProduct.category && p.id !== fetchedProduct.id)
-          .slice(0, 4);
-        setSimilarProducts(similar);
+        const recommended = getRecommendedProducts(fetchedProduct, allProducts, 4);
+        setSimilarProducts(recommended);
       } catch (error) {
         setNotFound(true);
       } finally {

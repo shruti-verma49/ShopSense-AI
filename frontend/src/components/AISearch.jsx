@@ -1,9 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Search, Headphones, Laptop, Gift, Smartphone, Footprints, Watch } from "lucide-react";
+import { fetchProducts } from "../services/productService";
+import { searchProducts } from "../utils/searchProducts";
 
 function AISearch() {
   const [query, setQuery] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts()
+      .then(setProducts)
+      .catch(() => {});
+  }, []);
+
+  const results = searchProducts(products, query).slice(0, 5);
 
   const suggestionChips = [
     { icon: Headphones, label: "Best headphones for gaming" },
@@ -45,20 +57,45 @@ function AISearch() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-          className="mt-10 flex items-center gap-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-2 max-w-2xl mx-auto"
+          className="mt-10 relative max-w-2xl mx-auto"
         >
-          <Search size={20} className="ml-3 text-gray-400 shrink-0" />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Example: I need running shoes under ₹4000..."
-            className="flex-1 min-w-0 py-3 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent outline-none"
-          />
-          <button className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-105 transition-all duration-200 shrink-0">
-            <Sparkles size={16} />
-            <span className="hidden sm:inline">AI Search</span>
-          </button>
+          <div className="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-2">
+            <Search size={20} className="ml-3 text-gray-400 shrink-0" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Example: I need running shoes under ₹4000..."
+              className="flex-1 min-w-0 py-3 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent outline-none"
+            />
+            <button className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] hover:scale-105 transition-all duration-200 shrink-0">
+              <Sparkles size={16} />
+              <span className="hidden sm:inline">AI Search</span>
+            </button>
+          </div>
+
+          {query.trim() && results.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-20">
+              {results.map((product) => {
+                const Icon = product.icon;
+                return (
+                  <Link
+                    key={product.id}
+                    to={`/product/${product.id}`}
+                    className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#6D5DF6] to-[#5B8DEF] flex items-center justify-center shrink-0">
+                      <Icon size={16} className="text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{product.title}</p>
+                      <p className="text-xs text-gray-400">{product.category} · ₹{product.price}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </motion.div>
 
         <motion.div

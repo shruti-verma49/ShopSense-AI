@@ -1,17 +1,35 @@
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Laptop, Shirt, Footprints, Home, Palette, BookOpen, Gamepad2, Watch, ArrowRight } from "lucide-react";
+import { fetchProducts } from "../services/productService";
+
+const BASE_CATEGORIES = [
+  { icon: Laptop, name: "Electronics", description: "Gadgets & devices for everyday life" },
+  { icon: Shirt, name: "Fashion", description: "Trending styles for every season" },
+  { icon: Footprints, name: "Footwear", description: "Comfort meets everyday style" },
+  { icon: Home, name: "Home & Living", description: "Make your space feel like home" },
+  { icon: Palette, name: "Beauty", description: "Skincare, makeup & self-care picks" },
+  { icon: BookOpen, name: "Books", description: "Stories, guides & everything between" },
+  { icon: Gamepad2, name: "Gaming", description: "Gear for casual and pro players" },
+  { icon: Watch, name: "Accessories", description: "Small details that finish the look" },
+];
 
 function Categories() {
-  const categories = [
-    { icon: Laptop, name: "Electronics", description: "Gadgets & devices for everyday life", count: "320+ Products" },
-    { icon: Shirt, name: "Fashion", description: "Trending styles for every season", count: "540+ Products" },
-    { icon: Footprints, name: "Footwear", description: "Comfort meets everyday style", count: "180+ Products" },
-    { icon: Home, name: "Home & Living", description: "Make your space feel like home", count: "260+ Products" },
-    { icon: Palette, name: "Beauty", description: "Skincare, makeup & self-care picks", count: "210+ Products" },
-    { icon: BookOpen, name: "Books", description: "Stories, guides & everything between", count: "150+ Products" },
-    { icon: Gamepad2, name: "Gaming", description: "Gear for casual and pro players", count: "190+ Products" },
-    { icon: Watch, name: "Accessories", description: "Small details that finish the look", count: "230+ Products" },
-  ];
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts()
+      .then(setProducts)
+      .catch(() => {});
+  }, []);
+
+  const categories = useMemo(() => {
+    const withCounts = BASE_CATEGORIES.map((category) => ({
+      ...category,
+      count: products.filter((p) => p.category === category.name).length,
+    }));
+    return withCounts.sort((a, b) => b.count - a.count);
+  }, [products]);
 
   return (
     <section className="bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -50,7 +68,7 @@ function Categories() {
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
 
               <div className="mt-5 flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{count}</span>
+                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{count} Products</span>
                 <ArrowRight
                   size={18}
                   className="text-[#6D5DF6] group-hover:translate-x-1 transition-transform duration-200"
