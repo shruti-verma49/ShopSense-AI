@@ -153,7 +153,7 @@ function Navbar() {
                         <button
                           onClick={() => {
                             setIsProfileMenuOpen(false);
-                            toast("Profile page coming soon");
+                            navigate("/profile");
                           }}
                           className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
                         >
@@ -275,7 +275,7 @@ function Navbar() {
                       Hello, {currentUser.name?.split(" ")[0]}
                     </span>
                     <button
-                      onClick={() => toast("Profile page coming soon")}
+                      onClick={() => navigate("/profile")}
                       className="w-full text-left px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-sm font-medium text-gray-700 dark:text-gray-200"
                     >
                       Profile

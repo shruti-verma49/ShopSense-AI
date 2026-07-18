@@ -18,6 +18,11 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/Orders";
 import AdminUsers from "./pages/admin/UsersPage";
+import ProfileDashboard from "./pages/profile/Dashboard";
+import ProfileOrdersPreview from "./pages/profile/OrdersPreview";
+import ProfileWishlistPreview from "./pages/profile/WishlistPreview";
+import ProfileAddressesPage from "./pages/profile/AddressesPage";
+import ProfileAccountSettings from "./pages/profile/AccountSettings";
 
 function App() {
   return (
@@ -41,6 +46,11 @@ function App() {
         <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
         <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+        <Route path="/profile" element={<ProfileDashboard />} />
+        <Route path="/profile/orders" element={<ProfileOrdersPreview />} />
+        <Route path="/profile/wishlist" element={<ProfileWishlistPreview />} />
+        <Route path="/profile/addresses" element={<ProfileAddressesPage />} />
+        <Route path="/profile/settings" element={<ProfileAccountSettings />} />
       </Routes>
     </div>
   );
