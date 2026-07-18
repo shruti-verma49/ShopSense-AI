@@ -10,6 +10,8 @@ const {
   getAllOrdersAdmin,
   updateOrderStatus,
   getAllUsersAdmin,
+  getAllReviewsAdmin,
+  deleteReviewAdmin,
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -27,5 +29,8 @@ router.get("/orders", getAllOrdersAdmin);
 router.put("/orders/:id/status", updateOrderStatus);
 
 router.get("/users", getAllUsersAdmin);
+
+router.get("/reviews", getAllReviewsAdmin);
+router.delete("/reviews/:id", deleteReviewAdmin);
 
 module.exports = router;

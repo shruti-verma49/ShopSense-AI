@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/Orders";
 import AdminUsers from "./pages/admin/UsersPage";
+import AdminReviews from "./pages/admin/Reviews";
 import ProfileDashboard from "./pages/profile/Dashboard";
 import ProfileOrdersPreview from "./pages/profile/OrdersPreview";
 import ProfileWishlistPreview from "./pages/profile/WishlistPreview";
@@ -46,6 +47,7 @@ function App() {
         <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
         <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+        <Route path="/admin/reviews" element={<AdminRoute><AdminReviews /></AdminRoute>} />
         <Route path="/profile" element={<ProfileDashboard />} />
         <Route path="/profile/orders" element={<ProfileOrdersPreview />} />
         <Route path="/profile/wishlist" element={<ProfileWishlistPreview />} />

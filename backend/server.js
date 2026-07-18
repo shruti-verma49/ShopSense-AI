@@ -10,6 +10,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const addressRoutes = require("./routes/addressRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 dotenv.config();
 connectDB();
@@ -29,6 +30,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

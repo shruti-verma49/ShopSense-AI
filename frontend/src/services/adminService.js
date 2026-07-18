@@ -11,3 +11,6 @@ export const getAdminOrdersApi = (params) => api.get("/admin/orders", { params }
 export const updateOrderStatusApi = (id, deliveryStatus) => api.put(`/admin/orders/${id}/status`, { deliveryStatus });
 
 export const getAdminUsersApi = (params) => api.get("/admin/users", { params });
+
+export const getAdminReviewsApi = (params) => api.get("/admin/reviews", { params });
+export const deleteReviewAdminApi = (id) => api.delete(`/admin/reviews/${id}`);

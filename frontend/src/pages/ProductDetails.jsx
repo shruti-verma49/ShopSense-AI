@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { fetchProductById, fetchProducts } from "../services/productService";
+import ProductReviews from "../components/ProductReviews";
 import { getRecommendedProducts } from "../utils/productRecommendations";
 import { addRecentlyViewed } from "../utils/recentlyViewed";
 import ProductGallery from "../components/ProductGallery";
@@ -73,6 +74,7 @@ function ProductDetails() {
         </div>
 
         <SimilarProducts products={similarProducts} />
+        <ProductReviews productId={product.id} />
       </div>
     </div>
   );

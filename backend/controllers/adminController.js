@@ -1,3 +1,5 @@
+const Review = require("../models/Review");
+const { recalcProductRating } = require("./reviewController");
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Order = require("../models/Order");
@@ -199,6 +201,50 @@ const getAllUsersAdmin = async (req, res) => {
   }
 };
 
+const getAllReviewsAdmin = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const totalCount = await Review.countDocuments();
+    const reviews = await Review.find({})
+      .populate("user", "name email")
+      .populate("product", "title")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    return res.status(200).json({
+      success: true,
+      count: reviews.length,
+      totalCount,
+      page: Number(page),
+      totalPages: Math.ceil(totalCount / limit),
+      reviews,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Something went wrong while fetching reviews", error: error.message });
+  }
+};
+
+const deleteReviewAdmin = async (req, res) => {
+  try {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ success: false, message: "Review not found" });
+    }
+
+    const productId = review.product;
+    await review.deleteOne();
+    await recalcProductRating(productId);
+
+    return res.status(200).json({ success: true, message: "Review deleted successfully" });
+  } catch (error) {
+    if (error.name === "CastError") {
+      return res.status(400).json({ success: false, message: "Invalid review ID format" });
+    }
+    return res.status(500).json({ success: false, message: "Something went wrong while deleting the review", error: error.message });
+  }
+};
+
 module.exports = {
   getDashboardStats,
   getAllProductsAdmin,
@@ -208,4 +254,6 @@ module.exports = {
   getAllOrdersAdmin,
   updateOrderStatus,
   getAllUsersAdmin,
+  getAllReviewsAdmin,
+  deleteReviewAdmin,
 };

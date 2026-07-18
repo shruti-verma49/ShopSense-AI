@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, ShoppingBag, Users, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, Users, MessageSquare, LogOut } from "lucide-react";
 
 function AdminSidebar() {
   const navigate = useNavigate();
@@ -16,7 +16,8 @@ function AdminSidebar() {
     { to: "/admin/products", label: "Products", icon: Package },
     { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
     { to: "/admin/users", label: "Users", icon: Users },
-  ];
+    { to: "/admin/reviews", label: "Reviews", icon: MessageSquare } ,
+   ];
 
   return (
     <aside className="w-full md:w-64 shrink-0 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 md:min-h-[calc(100vh-64px)]">
