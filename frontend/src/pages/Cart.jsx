@@ -5,7 +5,6 @@ import { useCart } from "../context/CartContext";
 
 function Cart() {
   const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useCart();
-  console.log("Cart page items:", cartItems);
 
   const uniqueItemCount = cartItems.length;
   const grandTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -44,7 +43,6 @@ function Cart() {
 
         <div className="mt-10 grid lg:grid-cols-3 gap-8">
 
-          {/* Cart items list */}
           <div className="lg:col-span-2 space-y-4">
             <AnimatePresence>
               {cartItems.map((item) => {
@@ -97,7 +95,6 @@ function Cart() {
             </AnimatePresence>
           </div>
 
-          {/* Order summary */}
           <div className="lg:col-span-1">
             <div className="bg-gray-50 rounded-2xl border border-gray-200 p-6 sticky top-24">
               <h2 className="text-lg font-semibold text-gray-900">Order Summary</h2>
@@ -111,6 +108,13 @@ function Cart() {
                 <span className="font-semibold text-gray-900">Grand Total</span>
                 <span className="text-xl font-bold text-gray-900">₹{grandTotal}</span>
               </div>
+
+              <Link
+                to="/checkout"
+                className="mt-6 block w-full text-center py-3 rounded-xl bg-[#6D5DF6] text-white font-medium hover:bg-[#5b4de0] transition-all duration-200"
+              >
+                Proceed to Checkout
+              </Link>
             </div>
           </div>
         </div>
