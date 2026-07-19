@@ -1,6 +1,6 @@
 import { ChevronDown } from "lucide-react";
 
-const categories = ["All", "Smartphones", "Laptops", "Headphones", "Smart Watches", "Gaming Accessories", "Cameras", "Tablets"];
+const categories = ["All", "Electronics", "Fashion", "Gaming", "Audio", "Wearables", "Accessories", "Books"];
 
 const priceRanges = [
   { label: "All Prices", value: "all" },

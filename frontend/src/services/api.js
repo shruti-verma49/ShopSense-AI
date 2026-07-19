@@ -13,13 +13,27 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+let hasShownNetworkError = false;
+
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    hasShownNetworkError = false;
+    return response;
+  },
   (error) => {
+    if (!error.response) {
+      if (!hasShownNetworkError) {
+        toast.error("Can't reach the server. Please check your connection and try again.");
+        hasShownNetworkError = true;
+        setTimeout(() => { hasShownNetworkError = false; }, 5000);
+      }
+      return Promise.reject(error);
+    }
+
     const isLoginRequest = error.config?.url?.includes("/auth/login");
     const isRegisterRequest = error.config?.url?.includes("/auth/register");
 
-    if (error.response && error.response.status === 401 && !isLoginRequest && !isRegisterRequest) {
+    if (error.response.status === 401 && !isLoginRequest && !isRegisterRequest) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       window.dispatchEvent(new Event("authChange"));

@@ -69,7 +69,7 @@ function ProductDetails() {
         </Link>
 
         <div className="mt-6 grid md:grid-cols-2 gap-12">
-          <ProductGallery icon={product.icon} />
+          <ProductGallery product={product} />
           <ProductInfo product={product} />
         </div>
 

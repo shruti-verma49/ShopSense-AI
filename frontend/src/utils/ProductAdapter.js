@@ -1,35 +1,13 @@
-import {
-  Laptop,
-  Shirt,
-  Footprints,
-  Home,
-  Palette,
-  BookOpen,
-  Gamepad2,
-  Watch,
-  Package,
-  Smartphone,
-  Headphones,
-  Camera,
-  Tablet,
-} from "lucide-react";
+import { Laptop, Shirt, Gamepad2, Headphones, Watch, Backpack, BookOpen, Package } from "lucide-react";
 
 const categoryIconMap = {
   Electronics: Laptop,
   Fashion: Shirt,
-  Footwear: Footprints,
-  "Home & Living": Home,
-  Beauty: Palette,
-  Books: BookOpen,
   Gaming: Gamepad2,
-  Accessories: Watch,
-  Smartphones: Smartphone,
-  Laptops: Laptop,
-  Headphones: Headphones,
-  "Smart Watches": Watch,
-  "Gaming Accessories": Gamepad2,
-  Cameras: Camera,
-  Tablets: Tablet,
+  Audio: Headphones,
+  Wearables: Watch,
+  Accessories: Backpack,
+  Books: BookOpen,
 };
 
 export function getCategoryIcon(category) {
@@ -56,6 +34,8 @@ export function normalizeProduct(product) {
     reviewCount: product.reviewCount || 0,
     isAIPick: !!product.featured,
     icon: getCategoryIcon(product.category),
+    image: product.image || "",
+    images: product.images || [],
     description: product.description || "",
     longDescription: product.longDescription || product.description || "",
     features: product.features || [],

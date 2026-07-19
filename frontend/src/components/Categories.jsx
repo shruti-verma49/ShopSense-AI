@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Laptop, Shirt, Footprints, Home, Palette, BookOpen, Gamepad2, Watch, ArrowRight } from "lucide-react";
+import { Laptop, Shirt, Gamepad2, Headphones, Watch, Backpack, BookOpen, ArrowRight } from "lucide-react";
 import { fetchProducts } from "../services/productService";
 
 const BASE_CATEGORIES = [
-  { icon: Laptop, name: "Electronics", description: "Gadgets & devices for everyday life" },
-  { icon: Shirt, name: "Fashion", description: "Trending styles for every season" },
-  { icon: Footprints, name: "Footwear", description: "Comfort meets everyday style" },
-  { icon: Home, name: "Home & Living", description: "Make your space feel like home" },
-  { icon: Palette, name: "Beauty", description: "Skincare, makeup & self-care picks" },
-  { icon: BookOpen, name: "Books", description: "Stories, guides & everything between" },
-  { icon: Gamepad2, name: "Gaming", description: "Gear for casual and pro players" },
-  { icon: Watch, name: "Accessories", description: "Small details that finish the look" },
+  { icon: Laptop, name: "Electronics", description: "Phones, laptops, tablets & cameras" },
+  { icon: Shirt, name: "Fashion", description: "Clothing and footwear for everyone" },
+  { icon: Gamepad2, name: "Gaming", description: "Consoles, controllers & gaming gear" },
+  { icon: Headphones, name: "Audio", description: "Headphones, earbuds & speakers" },
+  { icon: Watch, name: "Wearables", description: "Smartwatches and fitness bands" },
+  { icon: Backpack, name: "Accessories", description: "Bags, cases, chargers & more" },
+  { icon: BookOpen, name: "Books", description: "Fiction, business & self-help reads" },
 ];
 
 function Categories() {
@@ -58,22 +58,26 @@ function Categories() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.05 }}
-              className="group cursor-pointer bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
             >
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6D5DF6] to-[#5B8DEF] flex items-center justify-center">
-                <Icon size={26} className="text-white" />
-              </div>
+              <Link
+                to={`/products?category=${encodeURIComponent(name)}`}
+                className="group block bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
+              >
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#6D5DF6] to-[#5B8DEF] flex items-center justify-center">
+                  <Icon size={26} className="text-white" />
+                </div>
 
-              <h3 className="mt-5 text-lg font-semibold text-gray-900 dark:text-white">{name}</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
+                <h3 className="mt-5 text-lg font-semibold text-gray-900 dark:text-white">{name}</h3>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{description}</p>
 
-              <div className="mt-5 flex items-center justify-between">
-                <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{count} Products</span>
-                <ArrowRight
-                  size={18}
-                  className="text-[#6D5DF6] group-hover:translate-x-1 transition-transform duration-200"
-                />
-              </div>
+                <div className="mt-5 flex items-center justify-between">
+                  <span className="text-xs font-medium text-gray-400 dark:text-gray-500">{count} Products</span>
+                  <ArrowRight
+                    size={18}
+                    className="text-[#6D5DF6] group-hover:translate-x-1 transition-transform duration-200"
+                  />
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>

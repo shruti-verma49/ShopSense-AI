@@ -75,16 +75,26 @@ function Navbar() {
               ShopSense <span className="text-indigo-600">AI</span>
             </span>
 
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link}
-                  href="#"
-                  className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-300 hover:after:w-full"
-                >
-                  {link}
-                </a>
-              ))}
+          <div className="hidden md:flex items-center gap-8">
+              {navLinks.map((link) =>
+                link === "Products" ? (
+                  <Link
+                    key={link}
+                    to="/products"
+                    className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-300 hover:after:w-full"
+                  >
+                    {link}
+                  </Link>
+                ) : (
+                  <a
+                    key={link}
+                    href="#"
+                    className="relative text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-indigo-600 after:transition-all after:duration-300 hover:after:w-full"
+                  >
+                    {link}
+                  </a>
+                )
+              )}
             </div>
 
             <div className="hidden md:flex items-center gap-3">
@@ -227,15 +237,26 @@ function Navbar() {
               className="md:hidden overflow-hidden border-t border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md"
             >
               <div className="px-6 py-4 flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <a
-                    key={link}
-                    href="#"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
-                  >
-                    {link}
-                  </a>
-                ))}
+                {navLinks.map((link) =>
+                  link === "Products" ? (
+                    <Link
+                      key={link}
+                      to="/products"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                    >
+                      {link}
+                    </Link>
+                  ) : (
+                    <a
+                      key={link}
+                      href="#"
+                      className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+                    >
+                      {link}
+                    </a>
+                  )
+                )}
 
                 <button
                   onClick={() => {
